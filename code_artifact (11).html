@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>දහම් පාසල් සමිතිය</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Sinhala', sans-serif;
+            background-color: #f8fafc;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .milestone-row {
+            background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+        .checkbox-custom:checked + div {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+        .checkbox-custom:checked + div svg { display: block; }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800 selection:bg-indigo-200 selection:text-indigo-900 overflow-x-hidden">
+
+    <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-[98%] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <!-- Logo Updated with Background Color -->
+                    <img src="image_4a80e2.png" alt="Logo" class="w-10 h-10 rounded-xl bg-indigo-600 shadow-md object-contain p-1.5" onerror="this.onerror=null; this.src='https://placehold.co/40x40/4f46e5/ffffff?text=ධ';">
+                    <span class="font-bold text-lg md:text-xl text-slate-800 tracking-tight hidden sm:block">දහම් පාසල් <span class="text-indigo-600">සමිතිය</span></span>
+                </div>
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <span id="role-badge" class="hidden text-xs font-semibold bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full border border-slate-200">Role</span>
+                    <span id="connection-status" class="text-[10px] sm:text-xs font-medium bg-indigo-50 text-indigo-600 px-2 sm:px-3 py-1.5 rounded-full border border-indigo-100 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                        <span class="hidden sm:inline">Connecting...</span>
+                    </span>
+                    
+                    <button id="settings-btn" onclick="openSettingsModal()" class="hidden p-2 text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 rounded-full transition-colors border border-slate-200 hover:border-indigo-200" title="Settings">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </button>
+
+                    <button id="logout-btn" onclick="logout()" class="hidden text-[10px] sm:text-sm font-medium text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-colors">පිටවන්න</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow p-4 md:p-6 lg:p-8 flex justify-center w-full">
+        
+        <div id="role-selection" class="bg-white p-6 sm:p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-lg w-full text-center mt-6 sm:mt-10 h-fit transition-all">
+            <h2 class="text-xl sm:text-2xl font-bold mb-2 text-slate-800">ඔබගේ භූමිකාව තෝරන්න</h2>
+            <p class="text-slate-500 mb-8 text-xs sm:text-sm">පද්ධතියට ඇතුලත් වීම සඳහා පහතින් ගැලපෙන ගිණුම තෝරන්න.</p>
+            <div class="space-y-4">
+                <button onclick="selectRole('admin')" class="group w-full bg-slate-50 hover:bg-indigo-600 text-slate-700 hover:text-white border border-slate-200 hover:border-indigo-600 font-semibold py-4 px-4 rounded-xl transition-all duration-300 flex justify-start items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-white border border-slate-200 group-hover:border-transparent group-hover:bg-indigo-500 flex items-center justify-center text-indigo-600 group-hover:text-white transition-colors flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div>
+                    <div class="text-left"><div class="text-sm sm:text-base">Admin (පරිපාලක)</div><div class="text-[10px] sm:text-xs font-normal opacity-70">ලැප්ටොප් / පරිගණක සඳහා සුදුසුයි</div></div>
+                </button>
+                <button onclick="selectRole('creator')" class="group w-full bg-slate-50 hover:bg-emerald-600 text-slate-700 hover:text-white border border-slate-200 hover:border-emerald-600 font-semibold py-4 px-4 rounded-xl transition-all duration-300 flex justify-start items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-white border border-slate-200 group-hover:border-transparent group-hover:bg-emerald-500 flex items-center justify-center text-emerald-600 group-hover:text-white transition-colors flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></div>
+                    <div class="text-left"><div class="text-sm sm:text-base">විශේෂාංග ඇතුලත් කරන්නා</div><div class="text-[10px] sm:text-xs font-normal opacity-70">ජංගම දුරකථන සඳහා සුදුසුයි</div></div>
+                </button>
+                <button onclick="selectRole('viewer')" class="group w-full bg-slate-50 hover:bg-cyan-600 text-slate-700 hover:text-white border border-slate-200 hover:border-cyan-600 font-semibold py-4 px-4 rounded-xl transition-all duration-300 flex justify-start items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-white border border-slate-200 group-hover:border-transparent group-hover:bg-cyan-500 flex items-center justify-center text-cyan-600 group-hover:text-white transition-colors flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                    <div class="text-left"><div class="text-sm sm:text-base">User (ප්‍රිවීවූ කරන්නා)</div><div class="text-[10px] sm:text-xs font-normal opacity-70">ජංගම දුරකථන සඳහා සුදුසුයි</div></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="admin-view" class="hidden w-full max-w-[100%] flex-col xl:flex-row gap-6 animate-fade-in">
+            <div class="w-full xl:w-[400px] flex flex-col gap-6 flex-shrink-0">
+                <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">නව දත්ත ඇතුලත් කරන්න</h2>
+                    <form id="admin-data-form" onsubmit="submitData(event, 'admin')" class="space-y-4">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1">සිසුවාගේ නම</label>
+                            <input type="text" id="admin-student-name" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm" placeholder="නම ඇතුලත් කරන්න">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1">ශ්‍රේණිය</label>
+                                <input type="text" id="admin-student-grade" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm" placeholder="උදා: 10">
+                            </div>
+                            <div>
+                                <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1">ඉදිරිපත් කිරීම</label>
+                                <select id="admin-student-presentation" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm cursor-pointer">
+                                    <option value="" disabled selected>Select Item</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 p-3 bg-amber-50 border border-amber-100 rounded-xl">
+                            <input type="checkbox" id="admin-is-prefect" onchange="handlePrefectCheckbox()" class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer flex-shrink-0">
+                            <label for="admin-is-prefect" class="text-xs sm:text-sm font-semibold text-amber-800 cursor-pointer select-none">ශිෂ්‍ය නායක විශේෂාංගය සඳහාද?</label>
+                        </div>
+                        <button type="submit" id="admin-submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl transition duration-200 shadow-sm active:scale-[0.98] text-sm sm:text-base">දත්ත එක් කරන්න</button>
+                    </form>
+                </div>
+
+                <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex-grow flex flex-col min-h-[350px]">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h2 class="text-lg font-bold text-slate-800">Pending අනුමත කිරීම</h2>
+                        <span id="pending-count" class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-1 rounded-md">0</span>
+                    </div>
+                    <div class="overflow-y-auto flex-grow max-h-[250px] mb-4 pr-2 space-y-2" id="pending-list-container"></div>
+                    <div class="mt-auto bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-3">
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700">තෝරාගත් දත්ත යොමු කරන ස්ථානය:</label>
+                        <select id="schedule-slot-select" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium"></select>
+                        <button onclick="scheduleSelectedItems()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg transition duration-200 active:scale-[0.98] text-sm">Schedule කරන්න</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex-grow flex flex-col h-[calc(100vh-120px)] min-h-[600px] overflow-hidden relative">
+                <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                        සම්පූර්ණ සජීවී ඇජෙන්ඩා එක (Live)
+                    </h2>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button id="admin-refresh-btn" onclick="manualRefresh('admin-refresh-btn')" class="p-2.5 bg-white border border-slate-300 rounded-full text-slate-500 hover:text-indigo-600 hover:border-indigo-400 hover:bg-indigo-50 transition-all shadow-sm" title="Refresh Data"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
+                        <div class="relative w-full sm:w-72">
+                            <input type="text" id="admin-search" onkeyup="handleSearch('admin')" class="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-full focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-shadow" placeholder="නම හෝ ඉදිරිපත් කිරීම සොයන්න...">
+                            <svg class="w-4 h-4 text-slate-400 absolute left-4 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overflow-y-auto overflow-x-auto flex-grow p-0 relative">
+                    <!-- Responsive Table setup: ensuring min-width so columns don't crush on mobile -->
+                    <table class="min-w-[900px] w-full text-left border-collapse">
+                        <thead class="bg-white sticky top-0 z-10 shadow-sm ring-1 ring-slate-200">
+                            <tr>
+                                <th class="px-3 py-3 w-10 text-center"></th>
+                                <th class="px-4 py-3 font-semibold text-slate-500 text-xs uppercase tracking-wider w-1/4">සිසුවාගේ නම</th>
+                                <th class="px-4 py-3 font-semibold text-slate-500 text-xs uppercase tracking-wider w-1/6">ශ්‍රේණිය</th>
+                                <th class="px-4 py-3 font-semibold text-slate-500 text-xs uppercase tracking-wider w-1/4">ඉදිරිපත් කිරීම</th>
+                                <th class="px-4 py-3 font-semibold text-slate-500 text-xs uppercase tracking-wider w-1/6">තත්වය</th>
+                                <th class="px-4 py-3 font-semibold text-slate-500 text-xs uppercase tracking-wider text-right w-1/6">ක්‍රියා</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-agenda-body" class="divide-y divide-slate-100 bg-white"></tbody>
+                    </table>
+                </div>
+
+                <div id="bulk-edit-bar" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 z-20 w-max max-w-[95%] transition-transform border border-slate-700">
+                    <span class="text-sm font-semibold whitespace-nowrap"><span id="bulk-edit-count">0</span> තෝරාගෙන ඇත</span>
+                    <select id="bulk-edit-slot" class="px-3 py-1.5 bg-slate-700 border border-slate-600 rounded-lg outline-none focus:ring-2 focus:ring-indigo-400 text-sm font-medium text-white"></select>
+                    <button onclick="bulkUpdateScheduled()" class="bg-indigo-500 hover:bg-indigo-600 px-4 py-1.5 rounded-lg text-sm font-bold transition shadow-sm active:scale-95">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="creator-view" class="hidden w-full max-w-lg flex-col gap-4 animate-fade-in pb-10">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-800">නව විශේෂාංගය (Pending)</h2>
+                    <button id="creator-refresh-btn" onclick="manualRefresh('creator-refresh-btn')" class="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-500 hover:text-emerald-600 hover:border-emerald-300 hover:bg-emerald-50 transition-all shadow-sm" title="Refresh">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    </button>
+                </div>
+                <form id="creator-data-form" onsubmit="submitData(event, 'creator')" class="space-y-4">
+                    <div>
+                        <input type="text" id="creator-student-name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm sm:text-base" placeholder="සිසුවාගේ නම">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="creator-student-grade" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm sm:text-base" placeholder="ශ්‍රේණිය">
+                        <select id="creator-student-presentation" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm sm:text-base cursor-pointer">
+                            <option value="" disabled selected>Select Item</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="creator-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition duration-200 shadow-sm active:scale-[0.98] text-base sm:text-lg">ඇතුලත් කරන්න</button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex-grow flex flex-col min-h-[400px]">
+                <div class="p-4 border-b border-slate-100">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-sm sm:text-base font-bold text-slate-800">ඔබේ දත්ත ලැයිස්තුව</h2>
+                        <button onclick="openCreatorAgenda()" class="text-[10px] sm:text-xs bg-cyan-50 text-cyan-700 font-bold px-3 py-1.5 rounded-lg border border-cyan-200 hover:bg-cyan-100 transition-colors flex items-center gap-1.5 shadow-sm">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            සම්පූර්ණ ඇජෙන්ඩාව
+                        </button>
+                    </div>
+                    <div class="relative w-full">
+                        <input type="text" id="creator-search" onkeyup="handleSearch('creator')" class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm" placeholder="සොයන්න...">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-4 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="overflow-y-auto p-2 space-y-2 flex-grow bg-slate-50/50" id="creator-list-body"></div>
+            </div>
+        </div>
+
+        <div id="viewer-view" class="hidden w-full max-w-4xl flex-col animate-fade-in h-[calc(100vh-100px)]">
+            <div class="bg-white rounded-3xl shadow-lg border border-slate-100 flex-grow flex flex-col overflow-hidden">
+                <div class="bg-cyan-600 text-white p-4 sm:p-5 shadow-md z-10 relative flex justify-between items-center">
+                    <div class="w-8"></div>
+                    <div class="text-center">
+                        <h2 class="text-lg sm:text-xl font-bold tracking-wide">සජීවී දත්ත පුවරුව</h2>
+                        <p class="text-cyan-100 text-[10px] sm:text-xs mt-1 font-medium tracking-wider uppercase">Live Audience Preview</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="viewer-refresh-btn" onclick="manualRefresh('viewer-refresh-btn')" class="w-8 h-8 flex items-center justify-center bg-cyan-700/50 hover:bg-cyan-700 rounded-full transition-colors border border-cyan-500/30" title="Refresh">
+                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        </button>
+                        <div class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-200 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-300"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Viewer Agenda Grid Container -->
+                <div class="overflow-y-auto flex-grow bg-slate-50 p-2 sm:p-4 space-y-4" id="viewer-agenda-body"></div>
+            </div>
+        </div>
+    </main>
+
+    
+    <!-- Settings Modal (Admin Only) -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[70] p-4 animate-fade-in">
+        <div class="bg-white rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-200">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    පද්ධති සැකසුම් (Settings)
+                </h3>
+                <div class="flex items-center gap-3">
+                    <button onclick="resetSettingsToDefault()" class="text-[10px] sm:text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 hover:border-rose-300 border border-rose-200 px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm">Reset Defaults</button>
+                    <button onclick="closeSettingsModal()" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                </div>
+            </div>
+            
+            <div class="p-2 sm:p-4 border-b border-slate-100 flex flex-wrap gap-2 bg-white">
+                <button id="tab-btn-pres" onclick="switchSettingsTab('pres')" class="flex-1 py-2 px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors bg-indigo-100 text-indigo-700 whitespace-nowrap">ඉදිරිපත් කිරීම් (Dropdowns)</button>
+                <button id="tab-btn-miles" onclick="switchSettingsTab('miles')" class="flex-1 py-2 px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">ප්‍රධාන අවස්ථා (Milestones)</button>
+                <button id="tab-btn-sec" onclick="switchSettingsTab('sec')" class="flex-1 py-2 px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap">ආරක්ෂාව (Security)</button>
+            </div>
+
+            <div class="overflow-y-auto p-4 bg-slate-50 flex-grow">
+                <!-- Presentations Tab -->
+                <div id="settings-tab-pres" class="space-y-6">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm border-b pb-2">සාමාන්‍ය ඉදිරිපත් කිරීම්</h4>
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="new-normal-pres" class="flex-1 px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:border-indigo-500" placeholder="අලුත් අයිතමය...">
+                            <button onclick="addConfigItem('normal')" class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-indigo-700">Add</button>
+                        </div>
+                        <ul id="list-normal-pres" class="space-y-1.5 max-h-40 overflow-y-auto"></ul>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 class="font-bold text-amber-700 mb-3 text-sm border-b pb-2 flex items-center gap-2"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg> ශිෂ්‍ය නායක ඉදිරිපත් කිරීම්</h4>
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="new-prefect-pres" class="flex-1 px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:border-amber-500" placeholder="අලුත් අයිතමය...">
+                            <button onclick="addConfigItem('prefect')" class="bg-amber-600 text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-amber-700">Add</button>
+                        </div>
+                        <ul id="list-prefect-pres" class="space-y-1.5 max-h-40 overflow-y-auto"></ul>
+                    </div>
+                </div>
+
+                <!-- Milestones Tab -->
+                <div id="settings-tab-miles" class="hidden space-y-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm border-b pb-2">නව ප්‍රධාන අවස්ථාව එක් කරන්න</h4>
+                        <div class="flex flex-col sm:flex-row gap-2 mb-2">
+                            <input type="text" id="new-mile-title" class="flex-[3] px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:border-emerald-500" placeholder="වගුවේ පෙන්වන නම (උදා: ගුරු විශේෂාංගය)">
+                            <input type="number" id="new-mile-slot" class="flex-1 px-3 py-1.5 border border-slate-300 rounded-lg text-sm outline-none focus:border-emerald-500" placeholder="Slot No">
+                            <button onclick="addMilestone()" class="bg-emerald-600 text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-emerald-700">Add</button>
+                        </div>
+                        <div class="text-[10px] text-slate-500">* මුලින් වගුවට පමණක් එක්වේ. පසුව Edit කර Combo Box එකට එක්කල හැක.</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm border-b pb-2">දැනට ඇති ප්‍රධාන අවස්ථා (Milestones) සහ පරාස</h4>
+                        <ul id="list-milestones" class="space-y-3 max-h-[350px] overflow-y-auto pr-2"></ul>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="settings-tab-sec" class="hidden space-y-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm border-b pb-2">Admin මුරපදය වෙනස් කිරීම</h4>
+                        <p class="text-xs text-slate-500 mb-3">නව මුරපදයක් ඇතුලත් කර Save කරන්න.</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="new-admin-password" class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:border-indigo-500 font-bold tracking-widest text-center" placeholder="නව මුරපදය">
+                            <button onclick="updateAdminPassword()" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Milestone Edit Modal (Advanced Settings) -->
+    <div id="milestone-edit-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-[80] p-4">
+        <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl border border-slate-200">
+            <h3 class="text-md font-bold text-slate-800 mb-4 border-b pb-2">අවස්ථාව / පරාසය වෙනස් කරන්න</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">වගුවේ පෙන්වන නම (Header)</label>
+                    <input type="text" id="edit-mile-title" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-indigo-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Combo Box හි පෙන්වන නම (Interval)</label>
+                    <input type="text" id="edit-mile-label" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-indigo-500 text-sm font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Slot අංකය (පිළිවෙල)</label>
+                    <input type="number" id="edit-mile-slot" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-indigo-500 text-sm font-medium">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-5">
+                <button onclick="closeMilestoneEditModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium">Cancel</button>
+                <button onclick="saveMilestoneEdit()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium shadow-sm">Save Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline Edit Prompt Modal -->
+    <div id="input-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-[80] p-4">
+        <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl">
+            <h3 id="input-modal-title" class="text-md font-bold text-slate-800 mb-3">Edit</h3>
+            <input type="text" id="input-modal-val" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-indigo-500 mb-4 text-sm">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeInputModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium">Cancel</button>
+                <button id="input-modal-save-btn" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Creator Full Agenda Modal (Now wider and fully responsive) -->
+    <div id="creator-agenda-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[55] p-2 sm:p-4 animate-fade-in">
+        <div class="bg-white rounded-2xl w-full max-w-4xl shadow-2xl border border-slate-100 flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h3 class="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    සම්පූර්ණ ඇජෙන්ඩාව (Preview)
+                </h3>
+                <button onclick="closeCreatorAgenda()" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+            <!-- Grid Container for Creator Modal matching Viewer layout -->
+            <div class="overflow-y-auto p-2 sm:p-4 bg-slate-50 flex-grow space-y-4" id="creator-modal-agenda-body"></div>
+        </div>
+    </div>
+
+    <!-- Edit Modal (For Records) -->
+    <div id="edit-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-slate-100">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">දත්ත වෙනස් කිරීම</h3>
+            <form id="edit-form" class="space-y-4">
+                <input type="hidden" id="edit-doc-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">නම</label>
+                    <input type="text" id="edit-name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-slate-800 font-medium text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">ශ්‍රේණිය</label>
+                    <input type="text" id="edit-grade" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-slate-800 font-medium text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase">ඉදිරිපත් කිරීම</label>
+                    <select id="edit-presentation" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-slate-800 font-medium text-sm">
+                        <option value="" disabled selected>Select Item</option>
+                    </select>
+                </div>
+                <div id="edit-slot-container" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 mt-2 uppercase">Schedule ස්ථානය</label>
+                    <select id="edit-slot" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-indigo-500 text-slate-800 font-medium text-sm"></select>
+                </div>
+                <div class="flex justify-end gap-3 mt-6 pt-2">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm font-medium transition">අවලංගු කරන්න</button>
+                    <button type="button" onclick="saveEdit()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition shadow-sm">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="message-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[90] p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center border border-slate-100">
+            <div id="modal-icon" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-rose-100 mb-4">
+                <svg class="h-6 w-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 id="modal-title" class="text-lg font-bold text-slate-900 mb-2">Message</h3>
+            <p id="modal-message" class="text-slate-500 mb-6 text-sm">Details here.</p>
+            <button onclick="closeMessageModal()" class="w-full bg-slate-800 hover:bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition active:scale-[0.98]">හරි (OK)</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-confirm-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-[85] p-4 animate-fade-in">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center border border-slate-100">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-rose-100 mb-4">
+                <svg class="h-6 w-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">මෙය ඉවත් කිරීමට අවශ්‍යද?</h3>
+            <p class="text-slate-500 mb-6 text-sm">මෙම දත්තය පද්ධතියෙන් ඉවත් වනු ඇත. මෙය නැවත ලබාගත නොහැක.</p>
+            <div class="flex justify-center gap-3">
+                <button onclick="closeDeleteModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition active:scale-[0.98]">නැහැ</button>
+                <button id="confirm-delete-btn" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition active:scale-[0.98]">ඔව්</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Auth Modal -->
+    <div id="admin-auth-modal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fade-in">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center border border-slate-100">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 mb-4">
+                <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Admin ප්‍රවේශය</h3>
+            <p class="text-slate-500 mb-5 text-sm">කරුණාකර මුරපදය ඇතුලත් කරන්න.</p>
+            <input type="password" id="admin-password-input" onkeyup="if(event.key === 'Enter') verifyAdminPassword()" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none mb-5 text-center tracking-[0.5em] text-lg font-bold" placeholder="••••">
+            <div class="flex justify-center gap-3">
+                <button onclick="closeAdminAuthModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition">අවලංගු කරන්න</button>
+                <button onclick="verifyAdminPassword()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition shadow-sm">ඇතුලත් වන්න</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Setup
+        const appId = 'sdp-samithiya';
+        const firebaseConfig = {
+          apiKey: "AIzaSyAP9r2CUGKFeuB_gnJt_8wn5yPK-sNz1QI",
+          authDomain: "sdp-samithiya.firebaseapp.com",
+          projectId: "sdp-samithiya",
+          storageBucket: "sdp-samithiya.firebasestorage.app",
+          messagingSenderId: "744736675438",
+          appId: "1:744736675438:web:5d0cc0f78feaae8334b87f",
+          measurementId: "G-0Q4XYVSTCN"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        const dataPath = `artifacts/${appId}/public/data/agenda_items_v3`;
+        const configPath = `artifacts/${appId}/public/data/app_config_v3`;
+
+        // State Variables
+        let isAppReady = false;
+        let unsubscribeSnapshot = null;
+        let unsubscribeConfig = null;
+        let activeRole = null;
+        let allData = [];
+        let selectedPendingIds = new Set();
+        let selectedScheduledIds = new Set();
+        let searchQuery = "";
+        
+        // Default Config State
+        const defaultConfig = {
+            adminPassword: "2001",
+            normalPresentations: ["ගීතයක්", "කවියක්", "කතාවක්", "නාට්‍යයක්", "විවාදයක්", "නැටුමක්", "වාදනයක්"],
+            prefectPresentations: ["ආදේශ කිරීම", "පාස් කිරීම", "ගීතෙන් ගීතය"],
+            milestones: [
+                { id: "m1", title: "සමිතියේ ආරම්භය", dropdownLabel: "දහම් දැනුම තරගයට පෙර", slot: 1 },
+                { id: "m2", title: "ශ්‍රී සරණංකර දහම් දැනුමාධීපතී.", dropdownLabel: "දහම් දැනුම තරගයට පසු - ශිෂ්‍ය නායක විශේෂාංගය", slot: 2 },
+                { id: "m3", title: "ශිෂ්‍ය නායක විශේෂාංගය", dropdownLabel: "ශිෂ්‍ය නායක විශේෂාංගයට පසු - ගුරු විශේෂාංගය", slot: 3 },
+                { id: "m4", title: "ගුරු විශේෂාංගය", dropdownLabel: "ගුරු විශේෂාංගය - සමිතියේ අවසානය", slot: 4 },
+                { id: "m5", title: "සමිතියේ අවසානය", dropdownLabel: "", slot: 5 }
+            ]
+        };
+        
+        let appConfig = JSON.parse(JSON.stringify(defaultConfig));
+
+        let confirmDeleteCallback = null;
+        let inputSaveCallback = null;
+
+        async function initAuth() {
+            try {
+                // Force Anonymous sign in avoiding the Canvas restricted token mismatch
+                await signInAnonymously(auth);
+                isAppReady = true;
+                const statusEl = document.getElementById('connection-status');
+                statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="hidden sm:inline">Online</span>`;
+                statusEl.classList.replace('bg-indigo-50', 'bg-emerald-50');
+                statusEl.classList.replace('text-indigo-600', 'text-emerald-700');
+                statusEl.classList.replace('border-indigo-100', 'border-emerald-200');
+            } catch (error) {
+                console.error("Auth error:", error);
+                showErrorModal("සම්බන්ධතා දෝෂයකි", "Firebase හා සම්බන්ධ වීමට නොහැකි විය.");
+            }
+        }
+        initAuth();
+
+        window.selectRole = function(role) {
+            if (!isAppReady) {
+                showErrorModal("කරුණාකර රැඳී සිටින්න", "පද්ධතිය සූදානම් වෙමින් පවතී...");
+                return;
+            }
+            if (role === 'admin') {
+                document.getElementById('admin-password-input').value = '';
+                document.getElementById('admin-auth-modal').classList.remove('hidden');
+                setTimeout(() => document.getElementById('admin-password-input').focus(), 100);
+            } else {
+                proceedRoleSelection(role);
+            }
+        }
+
+        window.verifyAdminPassword = function() {
+            const pwd = document.getElementById('admin-password-input').value;
+            const correctPwd = appConfig.adminPassword || '2001';
+            
+            if (pwd === correctPwd) {
+                document.getElementById('admin-auth-modal').classList.add('hidden');
+                proceedRoleSelection('admin');
+            } else {
+                showErrorModal("වැරදියි", "ඇතුලත් කල මුරපදය වැරදියි!");
+                document.getElementById('admin-password-input').value = '';
+            }
+        }
+
+        window.closeAdminAuthModal = function() {
+            document.getElementById('admin-auth-modal').classList.add('hidden');
+        }
+
+        function proceedRoleSelection(role) {
+            activeRole = role;
+            document.getElementById('role-selection').classList.add('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
+            
+            const badge = document.getElementById('role-badge');
+            badge.classList.remove('hidden');
+
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.remove('flex');
+            document.getElementById('creator-view').classList.add('hidden');
+            document.getElementById('creator-view').classList.remove('flex');
+            document.getElementById('viewer-view').classList.add('hidden');
+            document.getElementById('viewer-view').classList.remove('flex');
+
+            if (role === 'admin') {
+                badge.textContent = "Admin";
+                document.getElementById('admin-view').classList.remove('hidden');
+                document.getElementById('admin-view').classList.add('flex', 'xl:flex-row', 'flex-col');
+                document.getElementById('settings-btn').classList.remove('hidden');
+            } else if (role === 'creator') {
+                badge.textContent = "Creator";
+                document.getElementById('creator-view').classList.remove('hidden');
+                document.getElementById('creator-view').classList.add('flex');
+                document.getElementById('settings-btn').classList.add('hidden');
+            } else if (role === 'viewer') {
+                badge.textContent = "Audience";
+                document.getElementById('viewer-view').classList.remove('hidden');
+                document.getElementById('viewer-view').classList.add('flex');
+                document.getElementById('settings-btn').classList.add('hidden');
+            }
+
+            startRealtimeUpdates();
+        }
+
+        window.logout = function() {
+            if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
+            if (unsubscribeConfig) { unsubscribeConfig(); unsubscribeConfig = null; }
+            activeRole = null;
+            selectedPendingIds.clear();
+            selectedScheduledIds.clear();
+            updateBulkEditBar();
+            searchQuery = "";
+            document.getElementById('admin-search').value = "";
+            document.getElementById('creator-search').value = "";
+
+            document.getElementById('role-selection').classList.remove('hidden');
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('settings-btn').classList.add('hidden');
+            document.getElementById('role-badge').classList.add('hidden');
+
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('creator-view').classList.add('hidden');
+            document.getElementById('viewer-view').classList.add('hidden');
+        }
+
+        function startRealtimeUpdates() {
+            if (!auth.currentUser) return; 
+
+            // 1. Listen to Config
+            if (unsubscribeConfig) unsubscribeConfig();
+            const configDocRef = doc(db, configPath, 'main');
+            unsubscribeConfig = onSnapshot(configDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    appConfig = docSnap.data();
+                    if(appConfig.milestones) {
+                        appConfig.milestones.forEach(m => {
+                            if(m.dropdownLabel === undefined) m.dropdownLabel = "";
+                        });
+                    }
+                } else {
+                    setDoc(configDocRef, defaultConfig);
+                    appConfig = JSON.parse(JSON.stringify(defaultConfig));
+                }
+                populateDropdowns();
+                renderSettingsLists();
+                renderViews();
+            }, (error) => console.error("Config Snapshot error:", error));
+
+            // 2. Listen to Records
+            if (unsubscribeSnapshot) unsubscribeSnapshot();
+            const colRef = collection(db, dataPath);
+            unsubscribeSnapshot = onSnapshot(colRef, (snapshot) => {
+                allData = [];
+                snapshot.forEach(doc => { allData.push({ id: doc.id, ...doc.data() }); });
+                allData.sort((a, b) => a.timestamp - b.timestamp);
+                renderViews();
+            }, (error) => {
+                console.error("Snapshot error:", error);
+                showErrorModal("දත්ත දෝෂයකි", "සජීවී දත්ත ලබා ගැනීමේදී දෝෂයක් මතු විය.");
+            });
+        }
+
+        /* --- Dynamic Dropdown Management --- */
+        window.populateDropdowns = function() {
+            const isPrefect = document.getElementById('admin-is-prefect')?.checked;
+            const adminPres = document.getElementById('admin-student-presentation');
+            const creatorPres = document.getElementById('creator-student-presentation');
+            
+            const fillPres = (select, list) => {
+                if(!select) return;
+                const currentVal = select.value;
+                select.innerHTML = '<option value="" disabled selected>Select Item</option>';
+                (list || []).forEach(item => {
+                    select.innerHTML += `<option value="${item}">${item}</option>`;
+                });
+                if(list && list.includes(currentVal)) select.value = currentVal;
+            };
+
+            fillPres(adminPres, isPrefect ? appConfig.prefectPresentations : appConfig.normalPresentations);
+            fillPres(creatorPres, appConfig.normalPresentations);
+
+            const sortedMilestones = [...(appConfig.milestones || [])].sort((a, b) => a.slot - b.slot);
+            const fillSlots = (select) => {
+                if(!select) return;
+                const currentVal = select.value;
+                select.innerHTML = '';
+                sortedMilestones.forEach(m => {
+                    if (m.dropdownLabel && m.dropdownLabel.trim() !== "") {
+                        select.innerHTML += `<option value="${m.slot}">${m.slot}. ${m.dropdownLabel}</option>`;
+                    }
+                });
+                if(select.querySelector(`option[value="${currentVal}"]`)) select.value = currentVal;
+            };
+
+            fillSlots(document.getElementById('schedule-slot-select'));
+            fillSlots(document.getElementById('bulk-edit-slot'));
+            fillSlots(document.getElementById('edit-slot'));
+        }
+
+        window.handlePrefectCheckbox = function() { populateDropdowns(); }
+
+        /* --- Settings Management --- */
+        window.openSettingsModal = function() {
+            document.getElementById('settings-modal').classList.remove('hidden');
+            switchSettingsTab('pres');
+            renderSettingsLists();
+        }
+        window.closeSettingsModal = function() { document.getElementById('settings-modal').classList.add('hidden'); }
+        window.switchSettingsTab = function(tab) {
+            document.getElementById('settings-tab-pres').classList.add('hidden');
+            document.getElementById('settings-tab-miles').classList.add('hidden');
+            document.getElementById('settings-tab-sec').classList.add('hidden');
+
+            const classInactive = "flex-1 py-2 px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap";
+            document.getElementById('tab-btn-pres').className = classInactive;
+            document.getElementById('tab-btn-miles').className = classInactive;
+            document.getElementById('tab-btn-sec').className = classInactive;
+            
+            document.getElementById(`settings-tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tab}`).className = "flex-1 py-2 px-2 text-xs sm:text-sm font-bold rounded-lg transition-colors bg-indigo-100 text-indigo-700 whitespace-nowrap";
+        }
+
+        window.updateAdminPassword = function() {
+            const pwdInput = document.getElementById('new-admin-password');
+            const newPwd = pwdInput.value.trim();
+            if(!newPwd) {
+                showErrorModal("දෝෂයකි", "කරුණාකර නව මුරපදයක් ඇතුලත් කරන්න.");
+                return;
+            }
+            appConfig.adminPassword = newPwd;
+            saveConfig().then(() => {
+                pwdInput.value = '';
+                showErrorModal("සාර්ථකයි", "Admin මුරපදය සාර්ථකව වෙනස් කරන ලදී.");
+            });
+        }
+
+        async function saveConfig() {
+            if(!auth.currentUser) return;
+            try { await setDoc(doc(db, configPath, 'main'), appConfig); }
+            catch(e) { showErrorModal("දෝෂයකි", "සැකසුම් සුරැකීමට නොහැකි විය."); }
+        }
+
+        window.addConfigItem = function(type) {
+            const input = document.getElementById(`new-${type}-pres`);
+            const val = input.value.trim();
+            if(!val) return;
+            if(type === 'normal') {
+                if(!appConfig.normalPresentations) appConfig.normalPresentations = [];
+                if(!appConfig.normalPresentations.includes(val)) appConfig.normalPresentations.push(val);
+            } else {
+                if(!appConfig.prefectPresentations) appConfig.prefectPresentations = [];
+                if(!appConfig.prefectPresentations.includes(val)) appConfig.prefectPresentations.push(val);
+            }
+            input.value = '';
+            saveConfig();
+        }
+
+        window.deleteConfigItem = function(type, index) {
+            confirmDeleteCallback = () => {
+                if(type === 'normal') appConfig.normalPresentations.splice(index, 1);
+                else if(type === 'prefect') appConfig.prefectPresentations.splice(index, 1);
+                saveConfig();
+                closeDeleteModal();
+            };
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+            document.getElementById('confirm-delete-btn').onclick = confirmDeleteCallback;
+        }
+
+        window.editConfigItem = function(type, index) {
+            const currentVal = type === 'normal' ? appConfig.normalPresentations[index] : appConfig.prefectPresentations[index];
+            openInputModal("Edit Item", currentVal, (newVal) => {
+                if(type === 'normal') appConfig.normalPresentations[index] = newVal;
+                else appConfig.prefectPresentations[index] = newVal;
+                saveConfig();
+            });
+        }
+
+        window.addMilestone = function() {
+            const titleInput = document.getElementById('new-mile-title');
+            const slotInput = document.getElementById('new-mile-slot');
+            const title = titleInput.value.trim();
+            const slot = parseInt(slotInput.value);
+            if(!title || isNaN(slot)) { showErrorModal("දත්ත අඩුයි", "කරුණාකර නම සහ Slot අංකය ඇතුලත් කරන්න."); return; }
+            if(!appConfig.milestones) appConfig.milestones = [];
+            appConfig.milestones.push({ id: `m_${Date.now()}`, title, dropdownLabel: "", slot });
+            titleInput.value = ''; slotInput.value = '';
+            saveConfig();
+        }
+
+        let currentEditMilestoneIndex = -1;
+        window.openMilestoneEditModal = function(index) {
+            currentEditMilestoneIndex = index;
+            const m = appConfig.milestones[index];
+            document.getElementById('edit-mile-title').value = m.title;
+            document.getElementById('edit-mile-label').value = m.dropdownLabel || m.title;
+            document.getElementById('edit-mile-slot').value = m.slot;
+            document.getElementById('milestone-edit-modal').classList.remove('hidden');
+        }
+        window.closeMilestoneEditModal = function() { document.getElementById('milestone-edit-modal').classList.add('hidden'); }
+        
+        window.saveMilestoneEdit = function() {
+            if(currentEditMilestoneIndex === -1) return;
+            const title = document.getElementById('edit-mile-title').value.trim();
+            const dropdownLabel = document.getElementById('edit-mile-label').value.trim();
+            const slot = parseInt(document.getElementById('edit-mile-slot').value);
+            if(!title || isNaN(slot)) return;
+            appConfig.milestones[currentEditMilestoneIndex].title = title;
+            appConfig.milestones[currentEditMilestoneIndex].dropdownLabel = dropdownLabel;
+            appConfig.milestones[currentEditMilestoneIndex].slot = slot;
+            saveConfig();
+            closeMilestoneEditModal();
+        }
+
+        window.deleteMilestone = function(index) {
+            confirmDeleteCallback = () => {
+                appConfig.milestones.splice(index, 1);
+                saveConfig();
+                closeDeleteModal();
+            };
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+            document.getElementById('confirm-delete-btn').onclick = confirmDeleteCallback;
+        }
+
+        function renderSettingsLists() {
+            const rList = (id, arr, type) => {
+                const ul = document.getElementById(id);
+                if(!ul) return;
+                ul.innerHTML = '';
+                (arr || []).forEach((item, i) => {
+                    ul.innerHTML += `
+                        <li class="flex justify-between items-center bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 text-sm">
+                            <span class="font-medium text-slate-700">${item}</span>
+                            <div class="flex gap-2">
+                                <button onclick="editConfigItem('${type}', ${i})" class="text-indigo-500 hover:text-indigo-700 p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                <button onclick="deleteConfigItem('${type}', ${i})" class="text-rose-500 hover:text-rose-700 p-1"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                        </li>`;
+                });
+            };
+            rList('list-normal-pres', appConfig.normalPresentations, 'normal');
+            rList('list-prefect-pres', appConfig.prefectPresentations, 'prefect');
+
+            const mUl = document.getElementById('list-milestones');
+            if(mUl) {
+                mUl.innerHTML = '';
+                const sortedM = [...(appConfig.milestones || [])].sort((a,b) => a.slot - b.slot);
+                sortedM.forEach((m) => {
+                    const originalIndex = appConfig.milestones.findIndex(x => x.id === m.id);
+                    const labelText = (m.dropdownLabel && m.dropdownLabel.trim() !== "") ? m.dropdownLabel : '<span class="text-rose-500 text-[10px]">කොම්බෝ බොක්ස් එකට ඇතුලත් කර නැත</span>';
+                    mUl.innerHTML += `
+                        <li class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm flex flex-col gap-2">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded mr-2 shadow-sm border border-emerald-200">Slot ${m.slot}</span>
+                                    <span class="font-bold text-slate-800">${m.title}</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="openMilestoneEditModal(${originalIndex})" class="text-indigo-600 hover:text-white p-1.5 bg-indigo-50 hover:bg-indigo-500 rounded transition-colors" title="Edit"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                    <button onclick="deleteMilestone(${originalIndex})" class="text-rose-600 hover:text-white p-1.5 bg-rose-50 hover:bg-rose-500 rounded transition-colors" title="Delete"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-600 flex items-center gap-1.5 bg-white p-2 rounded-lg border border-slate-100 shadow-sm mt-1">
+                                <span class="font-bold text-slate-500 uppercase text-[9px] tracking-wider">Combo Box (Target):</span>
+                                <span class="font-semibold text-indigo-700">${labelText}</span>
+                            </div>
+                        </li>`;
+                });
+            }
+        }
+
+        window.resetSettingsToDefault = function() {
+            confirmDeleteCallback = async () => {
+                const btn = document.getElementById('confirm-delete-btn');
+                const oldText = btn.innerHTML;
+                btn.innerHTML = `<span class="animate-pulse">Resetting...</span>`;
+                btn.disabled = true;
+                try {
+                    await setDoc(doc(db, configPath, 'main'), defaultConfig);
+                    closeDeleteModal();
+                    showErrorModal("සාර්ථකයි!", "සැකසුම් සාමාන්‍ය තත්වයට පත් කරන ලදී.");
+                } catch(e) { showErrorModal("දෝෂයකි", "සැකසුම් Reset කිරීමට නොහැකි විය."); } 
+                finally { btn.innerHTML = oldText; btn.disabled = false; }
+            };
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+            document.querySelector('#delete-confirm-modal h3').textContent = "සැකසුම් සාමාන්‍ය තත්වයට (Reset Default) පත් කරන්නද?";
+            document.querySelector('#delete-confirm-modal p').textContent = "ඔබ විසින් එකතු කල සියලුම ප්‍රධාන අවස්ථා සහ වෙනත් සැකසුම් මුල් තත්වයට පත්වනු ඇත. මෙය නැවත හැරවිය නොහැක.";
+            document.getElementById('confirm-delete-btn').onclick = confirmDeleteCallback;
+        }
+
+        window.openInputModal = function(title, val, callback) {
+            document.getElementById('input-modal-title').textContent = title;
+            document.getElementById('input-modal-val').value = val;
+            inputSaveCallback = () => {
+                const newVal = document.getElementById('input-modal-val').value.trim();
+                if(newVal) { callback(newVal); closeInputModal(); }
+            };
+            document.getElementById('input-modal-save-btn').onclick = inputSaveCallback;
+            document.getElementById('input-modal').classList.remove('hidden');
+        }
+        window.closeInputModal = function() { document.getElementById('input-modal').classList.add('hidden'); }
+
+
+        /* --- Core Logic --- */
+        window.handleSearch = function(role) {
+            searchQuery = document.getElementById(`${role}-search`).value.toLowerCase();
+            renderViews();
+        }
+
+        window.manualRefresh = function(btnId) {
+            const btn = document.getElementById(btnId);
+            if(btn) {
+                const icon = btn.querySelector('svg');
+                if(icon) {
+                    icon.classList.add('animate-spin');
+                    setTimeout(() => icon.classList.remove('animate-spin'), 1000);
+                }
+            }
+            startRealtimeUpdates();
+        }
+
+        // --- Helper Function for fully responsive Viewer/Creator Grid Cards ---
+        function createAgendaCardHTML(item) {
+            const isPrefectIcon = item.isPrefect ? '⭐ ' : '';
+            let statusHtml = `<span class="text-indigo-600 font-bold bg-indigo-50 px-2 py-1 rounded inline-block text-center w-full sm:w-auto">Scheduled</span>`;
+            if(item.status === 'live') statusHtml = `<span class="text-rose-600 animate-pulse font-bold bg-rose-50 px-2 py-1 rounded shadow-sm border border-rose-100 inline-block text-center w-full sm:w-auto">Live Now</span>`;
+            if(item.status === 'done') statusHtml = `<span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded inline-block text-center w-full sm:w-auto">Done</span>`;
+
+            return `
+                <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-cyan-500 grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 transition-all hover:shadow-md mt-2">
+                    <div class="sm:col-span-4 min-w-0 flex flex-col justify-center">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">සිසුවාගේ නම</div>
+                        <div class="font-bold text-slate-800 text-sm sm:text-base truncate" title="${item.name}">${isPrefectIcon}${item.name}</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 sm:col-span-5 gap-3 sm:gap-4 sm:border-l border-slate-100 sm:pl-4">
+                        <div class="min-w-0">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">ශ්‍රේණිය</div>
+                            <div class="font-semibold text-slate-700 text-xs sm:text-sm truncate">${item.grade}</div>
+                        </div>
+                        <div class="min-w-0 sm:border-l border-slate-100 sm:pl-4">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">ඉදිරිපත් කිරීම</div>
+                            <div class="font-bold text-cyan-700 text-xs sm:text-sm truncate" title="${item.presentation}">${item.presentation}</div>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3 min-w-0 sm:border-l border-slate-100 sm:pl-4 flex items-center sm:items-start flex-col pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 justify-center">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 w-full text-center sm:text-left hidden sm:block">තත්වය</div>
+                        <div class="text-xs w-full">${statusHtml}</div>
+                    </div>
+                </div>`;
+        }
+
+        window.openCreatorAgenda = function() {
+            document.getElementById('creator-agenda-modal').classList.remove('hidden');
+            renderCreatorFullAgenda();
+        }
+        window.closeCreatorAgenda = function() { document.getElementById('creator-agenda-modal').classList.add('hidden'); }
+
+        function renderCreatorFullAgenda() {
+            const agendaBody = document.getElementById('creator-modal-agenda-body');
+            agendaBody.innerHTML = '';
+            
+            // Includes all visible statuses like the viewer logic
+            const scheduledData = allData.filter(d => d.status === 'scheduled' || d.status === 'live' || d.status === 'done');
+            const sortedM = [...(appConfig.milestones||[])].sort((a,b) => a.slot - b.slot);
+
+            sortedM.forEach(m => {
+                agendaBody.innerHTML += `<div class="bg-slate-800 text-white p-2 sm:p-2.5 rounded-xl shadow-sm text-center font-bold text-xs sm:text-sm tracking-wide mt-4">${m.title}</div>`;
+                const itemsForSlot = scheduledData.filter(d => d.slot === m.slot).sort((a, b) => {
+                    if (a.isPrefect && !b.isPrefect) return -1;
+                    if (!a.isPrefect && b.isPrefect) return 1;
+                    return a.timestamp - b.timestamp;
+                });
+                
+                itemsForSlot.forEach(item => {
+                    agendaBody.innerHTML += createAgendaCardHTML(item);
+                });
+            });
+        }
+
+        function renderViews() {
+            if (activeRole === 'admin') renderAdmin();
+            if (activeRole === 'creator') renderCreator();
+            if (activeRole === 'viewer') renderViewer();
+            
+            const creatorModal = document.getElementById('creator-agenda-modal');
+            if(creatorModal && !creatorModal.classList.contains('hidden')) renderCreatorFullAgenda();
+        }
+
+        window.submitData = async function(event, role) {
+            event.preventDefault();
+            if (!auth.currentUser) return; 
+
+            const nameInput = document.getElementById(`${role}-student-name`);
+            const gradeInput = document.getElementById(`${role}-student-grade`);
+            const presInput = document.getElementById(`${role}-student-presentation`);
+            const btn = document.getElementById(`${role}-submit-btn`);
+            
+            const name = nameInput.value.trim();
+            const grade = gradeInput.value.trim();
+            const pres = presInput.value; 
+
+            if (!pres || pres === "") {
+                showErrorModal("අවශ්‍ය දත්ත අඩුයි", "කරුණාකර ඉදිරිපත් කිරීම තෝරන්න.");
+                return;
+            }
+
+            const isDuplicate = allData.some(d => 
+                d.name.toLowerCase() === name.toLowerCase() && 
+                d.grade.toLowerCase() === grade.toLowerCase() &&
+                d.presentation.toLowerCase() === pres.toLowerCase()
+            );
+            
+            if (isDuplicate) {
+                showErrorModal("දත්තය පවතී", "මෙම සිසුවාගේ නම, ශ්‍රේණිය සහ ඉදිරිපත් කිරීම දැනටමත් පද්ධතියේ ඇත!");
+                return;
+            }
+
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span class="animate-pulse">සුරකිමින්...</span>`;
+
+            try {
+                let status = 'pending';
+                let slot = null;
+                let isPrefect = false;
+                let finalTimestamp = Date.now();
+
+                if (role === 'admin') {
+                    isPrefect = document.getElementById('admin-is-prefect').checked;
+                    if (isPrefect) {
+                        status = 'scheduled';
+                        const prefectM = (appConfig.milestones||[]).find(m => m.title.includes('ශිෂ්‍ය නායක'));
+                        slot = prefectM ? prefectM.slot : 3;
+                        
+                        // Enforce ordering: Prefect items always at bottom of existing prefect items, but above non-prefect items in that slot
+                        const itemsInSlot = allData.filter(d => d.slot === slot && (d.status === 'scheduled' || d.status === 'live' || d.status === 'done'));
+                        const prefectItems = itemsInSlot.filter(d => d.isPrefect).sort((a,b) => a.timestamp - b.timestamp);
+                        const normalItems = itemsInSlot.filter(d => !d.isPrefect).sort((a,b) => a.timestamp - b.timestamp);
+                        
+                        if (normalItems.length > 0) {
+                            // There are normal items. We must insert right before the first normal item
+                            const firstNormalTime = normalItems[0].timestamp;
+                            if (prefectItems.length > 0) {
+                                // Put it exactly halfway between last prefect and first normal
+                                const lastPrefectTime = prefectItems[prefectItems.length - 1].timestamp;
+                                finalTimestamp = (lastPrefectTime + firstNormalTime) / 2;
+                            } else {
+                                // Subtly deduct from normal item to place it above
+                                finalTimestamp = firstNormalTime - 1;
+                            }
+                        } else {
+                            // No normal items yet, just put it at the very end
+                            finalTimestamp = Date.now();
+                        }
+                    }
+                }
+
+                await addDoc(collection(db, dataPath), {
+                    name, grade, presentation: pres, status, slot, isPrefect, timestamp: finalTimestamp
+                });
+                
+                nameInput.value = ''; gradeInput.value = ''; presInput.value = '';
+                if(role==='admin') document.getElementById('admin-is-prefect').checked = false;
+                populateDropdowns();
+            } catch (error) {
+                console.error("Error adding doc: ", error);
+                showErrorModal("දෝෂයකි", "දත්ත ඇතුලත් කිරීමට නොහැකි විය.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // Selection logics
+        window.togglePendingSelect = function(id) {
+            if (selectedPendingIds.has(id)) selectedPendingIds.delete(id); else selectedPendingIds.add(id);
+        }
+        window.scheduleSelectedItems = async function() {
+            if (!auth.currentUser || selectedPendingIds.size === 0) return;
+            const slot = parseInt(document.getElementById('schedule-slot-select').value);
+            if (isNaN(slot)) return;
+            const baseTime = Date.now();
+            const updatePromises = Array.from(selectedPendingIds).map((id, index) => updateDoc(doc(db, dataPath, id), { status: 'scheduled', slot, timestamp: baseTime + index }));
+            try { await Promise.all(updatePromises); selectedPendingIds.clear(); } catch (err) { showErrorModal("දෝෂයකි", "Schedule කිරීම අසාර්ථකයි."); }
+        }
+        window.toggleScheduledSelect = function(id) {
+            if (selectedScheduledIds.has(id)) selectedScheduledIds.delete(id); else selectedScheduledIds.add(id);
+            updateBulkEditBar();
+        }
+        window.updateBulkEditBar = function() {
+            const bar = document.getElementById('bulk-edit-bar');
+            const count = document.getElementById('bulk-edit-count');
+            if (!bar || !count) return;
+            if(selectedScheduledIds.size > 0) { bar.classList.remove('hidden'); count.textContent = selectedScheduledIds.size; } 
+            else { bar.classList.add('hidden'); }
+        }
+        
+        window.bulkUpdateScheduled = async function() {
+            if (!auth.currentUser || selectedScheduledIds.size === 0) return;
+            const slot = parseInt(document.getElementById('bulk-edit-slot').value);
+            if (isNaN(slot)) return;
+            const baseTime = Date.now();
+            
+            const idsToUpdate = Array.from(selectedScheduledIds);
+            selectedScheduledIds.clear();
+            updateBulkEditBar();
+            renderViews();
+
+            const updatePromises = idsToUpdate.map((id, index) => updateDoc(doc(db, dataPath, id), { slot, timestamp: baseTime + index }));
+            try { await Promise.all(updatePromises); } catch (err) { showErrorModal("දෝෂයකි", "Update අසාර්ථකයි."); }
+        }
+
+        window.moveItem = async function(id, direction) {
+            if (!auth.currentUser) return;
+            const scheduledData = allData.filter(d => d.status === 'scheduled' || d.status === 'live');
+            const item = scheduledData.find(d => d.id === id);
+            if(!item) return;
+
+            const itemsInSlot = scheduledData.filter(d => d.slot === item.slot).sort((a, b) => {
+                if (a.isPrefect && !b.isPrefect) return -1;
+                if (!a.isPrefect && b.isPrefect) return 1;
+                return a.timestamp - b.timestamp;
+            });
+            const index = itemsInSlot.findIndex(d => d.id === id);
+
+            try {
+                if (direction === 'up' && index > 0) {
+                    const neighbor = itemsInSlot[index - 1];
+                    // Prevent moving non-prefect above prefect logic
+                    if (!item.isPrefect && neighbor.isPrefect) return; 
+                    const tempTime = item.timestamp;
+                    await Promise.all([
+                        updateDoc(doc(db, dataPath, item.id), { timestamp: neighbor.timestamp }),
+                        updateDoc(doc(db, dataPath, neighbor.id), { timestamp: tempTime })
+                    ]);
+                } else if (direction === 'down' && index < itemsInSlot.length - 1) {
+                    const neighbor = itemsInSlot[index + 1];
+                    if (item.isPrefect && !neighbor.isPrefect) return;
+                    const tempTime = item.timestamp;
+                    await Promise.all([
+                        updateDoc(doc(db, dataPath, item.id), { timestamp: neighbor.timestamp }),
+                        updateDoc(doc(db, dataPath, neighbor.id), { timestamp: tempTime })
+                    ]);
+                }
+            } catch (e) { showErrorModal("දෝෂයකි", "ස්ථානය මාරු කිරීමට නොහැකි විය."); }
+        }
+
+        function renderAdmin() {
+            const pendingData = allData.filter(d => d.status === 'pending');
+            const scheduledData = allData.filter(d => d.status === 'scheduled' || d.status === 'live' || d.status === 'done');
+            
+            document.getElementById('pending-count').textContent = pendingData.length;
+            const pendingContainer = document.getElementById('pending-list-container');
+            pendingContainer.innerHTML = '';
+            
+            if (pendingData.length === 0) {
+                pendingContainer.innerHTML = `<div class="text-center text-sm text-slate-400 py-6">Pending දත්ත කිසිවක් නැත.</div>`;
+            } else {
+                pendingData.forEach(item => {
+                    const isChecked = selectedPendingIds.has(item.id) ? 'checked' : '';
+                    pendingContainer.innerHTML += `
+                        <label class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition relative overflow-hidden group">
+                            <input type="checkbox" class="checkbox-custom absolute opacity-0 w-0 h-0" onchange="togglePendingSelect('${item.id}')" ${isChecked}>
+                            <div class="w-5 h-5 border-2 border-slate-300 rounded flex-shrink-0 mr-3 flex items-center justify-center transition-colors"><svg class="w-3 h-3 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+                            <div class="flex-grow min-w-0">
+                                <div class="font-bold text-sm text-slate-800 truncate">${item.name}</div>
+                                <div class="text-xs text-slate-500 truncate">${item.grade} • ${item.presentation}</div>
+                            </div>
+                        </label>`;
+                });
+            }
+
+            const agendaBody = document.getElementById('admin-agenda-body');
+            agendaBody.innerHTML = '';
+            
+            let mergedList = [];
+            const sortedM = [...(appConfig.milestones||[])].sort((a,b) => a.slot - b.slot);
+            
+            sortedM.forEach(m => {
+                mergedList.push({ isMilestone: true, title: m.title });
+                const itemsForSlot = scheduledData.filter(d => d.slot === m.slot).sort((a, b) => {
+                    if (a.isPrefect && !b.isPrefect) return -1;
+                    if (!a.isPrefect && b.isPrefect) return 1;
+                    return a.timestamp - b.timestamp;
+                });
+                
+                itemsForSlot.forEach((item, index) => {
+                    item.isFirstInSlot = (index === 0) || (item.isPrefect === false && index > 0 && itemsForSlot[index-1].isPrefect === true); // Respect boundary
+                    item.isLastInSlot = (index === itemsForSlot.length - 1) || (item.isPrefect === true && index < itemsForSlot.length-1 && itemsForSlot[index+1].isPrefect === false);
+                    
+                    if (searchQuery === "" || item.name.toLowerCase().includes(searchQuery) || item.presentation.toLowerCase().includes(searchQuery)) {
+                        mergedList.push(item);
+                    }
+                });
+            });
+
+            mergedList.forEach(item => {
+                if (item.isMilestone) {
+                    agendaBody.innerHTML += `<tr><td colspan="6" class="py-2.5 milestone-row text-sm sm:text-base">${item.title}</td></tr>`;
+                } else {
+                    const badge = item.isPrefect ? `<span class="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200 shadow-sm">ශිෂ්‍ය නායක</span>` : '';
+                    const isChecked = selectedScheduledIds.has(item.id) ? 'checked' : '';
+
+                    let statusHtml = `<span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border border-indigo-100 shadow-sm">Scheduled</span>`;
+                    if(item.status === 'live') statusHtml = `<span class="bg-rose-50 text-rose-600 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border border-rose-100 animate-pulse shadow-sm">Live Now</span>`;
+                    if(item.status === 'done') statusHtml = `<span class="bg-emerald-50 text-emerald-600 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border border-emerald-100 shadow-sm">Done</span>`;
+
+                    agendaBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition-colors group">
+                            <td class="px-3 py-3 text-center"><input type="checkbox" onchange="toggleScheduledSelect('${item.id}')" ${isChecked} class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer transition-all"></td>
+                            <td class="px-4 py-3 font-semibold text-slate-800 text-xs sm:text-sm whitespace-nowrap">${item.name} ${badge}</td>
+                            <td class="px-4 py-3 text-slate-600 text-xs sm:text-sm whitespace-nowrap">${item.grade}</td>
+                            <td class="px-4 py-3 text-slate-600 text-xs sm:text-sm whitespace-nowrap">${item.presentation}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">${statusHtml}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <div class="flex justify-end items-center gap-1">
+                                    <button onclick="moveItem('${item.id}', 'up')" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded hover:bg-slate-200 transition ${item.isFirstInSlot ? 'opacity-30 cursor-not-allowed' : ''}" ${item.isFirstInSlot ? 'disabled' : ''} title="ඉහළට ගෙනයන්න"><svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg></button>
+                                    <button onclick="moveItem('${item.id}', 'down')" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded hover:bg-slate-200 transition ${item.isLastInSlot ? 'opacity-30 cursor-not-allowed' : ''}" ${item.isLastInSlot ? 'disabled' : ''} title="පහළට ගෙනයන්න"><svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                                    <div class="w-px h-5 bg-slate-300 mx-1"></div>
+                                    <button onclick="openEditModal('${item.id}')" class="text-indigo-500 hover:text-indigo-700 p-1.5 rounded hover:bg-indigo-100 transition" title="වෙනස් කරන්න (Edit)"><svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                                    <button onclick="deleteRecord('${item.id}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded hover:bg-rose-100 transition" title="ඉවත් කරන්න (Delete)"><svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                                </div>
+                            </td>
+                        </tr>`;
+                }
+            });
+        }
+
+        function renderCreator() {
+            const listBody = document.getElementById('creator-list-body');
+            listBody.innerHTML = '';
+            
+            const filteredData = allData.filter(d => searchQuery === "" || d.name.toLowerCase().includes(searchQuery) || d.presentation.toLowerCase().includes(searchQuery));
+            if (filteredData.length === 0) { listBody.innerHTML = `<div class="text-center text-sm text-slate-400 py-10">දත්ත නොමැත.</div>`; return; }
+
+            filteredData.reverse().forEach(item => {
+                const statusBadge = item.status === 'pending' 
+                    ? `<span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded text-[10px] font-bold">PENDING</span>`
+                    : `<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold">SCHEDULED (Slot ${item.slot})</span>`;
+
+                listBody.innerHTML += `
+                    <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-bold text-sm sm:text-base text-slate-800">${item.name}</div>
+                                <div class="text-xs sm:text-sm text-slate-500 mt-0.5">${item.grade} • ${item.presentation}</div>
+                            </div>
+                            <div>${statusBadge}</div>
+                        </div>
+                        <div class="flex justify-end gap-2 mt-1 border-t border-slate-50 pt-3">
+                            <button onclick="openEditModal('${item.id}')" class="text-xs sm:text-sm text-indigo-600 font-semibold px-3 py-1.5 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">Edit</button>
+                            <button onclick="deleteRecord('${item.id}')" class="text-xs sm:text-sm text-rose-600 font-semibold px-3 py-1.5 bg-rose-50 rounded-lg hover:bg-rose-100 transition">Delete</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function renderViewer() {
+            const agendaBody = document.getElementById('viewer-agenda-body');
+            agendaBody.innerHTML = '';
+            const scheduledData = allData.filter(d => d.status === 'scheduled' || d.status === 'live' || d.status === 'done');
+            
+            const sortedM = [...(appConfig.milestones||[])].sort((a,b) => a.slot - b.slot);
+
+            sortedM.forEach(m => {
+                agendaBody.innerHTML += `<div class="bg-slate-800 text-white p-2.5 sm:p-3 rounded-xl shadow-sm text-center font-bold text-sm sm:text-base tracking-wide mt-4">${m.title}</div>`;
+                const itemsForSlot = scheduledData.filter(d => d.slot === m.slot).sort((a, b) => {
+                    if (a.isPrefect && !b.isPrefect) return -1;
+                    if (!a.isPrefect && b.isPrefect) return 1;
+                    return a.timestamp - b.timestamp;
+                });
+                
+                itemsForSlot.forEach(item => {
+                    agendaBody.innerHTML += createAgendaCardHTML(item);
+                });
+            });
+        }
+
+        // Data Edit / Delete Modals
+        let itemToDeleteId = null;
+        window.deleteRecord = function(docId) {
+            itemToDeleteId = docId;
+            confirmDeleteCallback = async () => {
+                if (!auth.currentUser || !itemToDeleteId) return;
+                const btn = document.getElementById('confirm-delete-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<span class="animate-pulse">මකාදමමින්...</span>`;
+                btn.disabled = true;
+                try {
+                    await deleteDoc(doc(db, dataPath, itemToDeleteId));
+                    closeDeleteModal();
+                } catch (e) { showErrorModal("දෝෂයකි", "මකා දැමීමට නොහැකි විය."); closeDeleteModal(); } 
+                finally { btn.innerHTML = originalText; btn.disabled = false; }
+            };
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+            document.querySelector('#delete-confirm-modal h3').textContent = "මෙය ඉවත් කිරීමට අවශ්‍යද?";
+            document.querySelector('#delete-confirm-modal p').textContent = "මෙම දත්තය පද්ධතියෙන් ඉවත් වනු ඇත. මෙය නැවත ලබාගත නොහැක.";
+            document.getElementById('confirm-delete-btn').onclick = confirmDeleteCallback;
+        }
+
+        window.closeDeleteModal = function() {
+            itemToDeleteId = null;
+            document.getElementById('delete-confirm-modal').classList.add('hidden');
+        }
+
+        window.openEditModal = function(id) {
+            const item = allData.find(d => d.id === id);
+            if(!item) return;
+
+            document.getElementById('edit-doc-id').value = item.id;
+            document.getElementById('edit-name').value = item.name;
+            document.getElementById('edit-grade').value = item.grade;
+            
+            const editPres = document.getElementById('edit-presentation');
+            const list = item.isPrefect ? appConfig.prefectPresentations : appConfig.normalPresentations;
+            editPres.innerHTML = '<option value="" disabled selected>Select Item</option>';
+            list.forEach(opt => { editPres.innerHTML += `<option value="${opt}">${opt}</option>`; });
+            editPres.value = item.presentation;
+            
+            const slotContainer = document.getElementById('edit-slot-container');
+            if (activeRole === 'admin' && (item.status === 'scheduled' || item.status === 'live' || item.status === 'done')) {
+                slotContainer.classList.remove('hidden');
+                document.getElementById('edit-slot').value = item.slot;
+            } else { slotContainer.classList.add('hidden'); }
+
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+        window.closeEditModal = function() { document.getElementById('edit-modal').classList.add('hidden'); }
+
+        window.saveEdit = async function() {
+            if (!auth.currentUser) return;
+            const id = document.getElementById('edit-doc-id').value;
+            const name = document.getElementById('edit-name').value.trim();
+            const grade = document.getElementById('edit-grade').value.trim();
+            const pres = document.getElementById('edit-presentation').value;
+
+            if(!name || !grade || !pres || pres === "") return;
+
+            let updateData = { name, grade, presentation: pres };
+            const slotContainer = document.getElementById('edit-slot-container');
+            
+            if (activeRole === 'admin' && !slotContainer.classList.contains('hidden')) {
+                const newSlot = parseInt(document.getElementById('edit-slot').value);
+                const currentItem = allData.find(d => d.id === id);
+                
+                if (currentItem && currentItem.slot !== newSlot) {
+                    updateData.slot = newSlot;
+                    // Sort order enforcement inside new slot will be natural (appended at bottom) unless it's prefect logic
+                    // We just give it a fresh timestamp to put it at the bottom of its respective block
+                    updateData.timestamp = Date.now();
+                }
+            }
+            try { await updateDoc(doc(db, dataPath, id), updateData); closeEditModal(); } 
+            catch (err) { showErrorModal("දෝෂයකි", "වෙනස්කම් යාවත්කාලීන කිරීමට නොහැකි විය."); }
+        }
+
+        window.showErrorModal = function(title, message) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('message-modal').classList.remove('hidden');
+        }
+        window.closeMessageModal = function() { document.getElementById('message-modal').classList.add('hidden'); }
+
+    </script>
+</body>
+</html>
