@@ -797,7 +797,7 @@
             currentEditMilestoneIndex = index;
             const m = appConfig.milestones[index];
             document.getElementById('edit-mile-title').value = m.title;
-            document.getElementById('edit-mile-label').value = m.dropdownLabel || m.title;
+            document.getElementById('edit-mile-label').value = m.dropdownLabel || "";
             document.getElementById('edit-mile-slot').value = m.slot;
             document.getElementById('milestone-edit-modal').classList.remove('hidden');
         };
@@ -1231,12 +1231,29 @@
                     ? `<span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded text-[10px] font-bold border border-amber-200">PENDING</span>`
                     : `<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-200">SCHEDULED (Slot ${item.slot})</span>`;
 
+                const prefectBadge = item.isPrefect 
+                    ? `<span class="ml-2 inline-block bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded text-[10px] font-bold border border-amber-200">ශිෂ්‍ය නායක</span>` 
+                    : '';
+
+                let actionButtons = '';
+                if (item.isPrefect) {
+                    actionButtons = `
+                        <button disabled class="text-xs sm:text-sm text-slate-400 font-semibold px-3 py-1.5 bg-slate-100 rounded-lg border border-slate-200 cursor-not-allowed opacity-70" title="ශිෂ්‍ය නායක විශේෂාංග වෙනස් කිරීම ඇඩ්මින්ට සීමා කර ඇත">Edit (Admin Only)</button>
+                        <button disabled class="text-xs sm:text-sm text-slate-400 font-semibold px-3 py-1.5 bg-slate-100 rounded-lg border border-slate-200 cursor-not-allowed opacity-70" title="ශිෂ්‍ය නායක විශේෂාංග ඉවත් කිරීම ඇඩ්මින්ට සීමා කර ඇත">Delete</button>
+                    `;
+                } else {
+                    actionButtons = `
+                        <button onclick="window.openEditModal('${item.id}')" class="text-xs sm:text-sm text-indigo-600 font-semibold px-3 py-1.5 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition shadow-sm">Edit</button>
+                        <button onclick="window.deleteRecord('${item.id}')" class="text-xs sm:text-sm text-rose-600 font-semibold px-3 py-1.5 bg-rose-50 rounded-lg hover:bg-rose-100 transition shadow-sm">Delete</button>
+                    `;
+                }
+
                 listBody.innerHTML += `
                     <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2.5 relative">
                         <div class="absolute top-3.5 right-3.5">${statusBadge}</div>
                         <div class="pr-24">
                             <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">සිසුවාගේ නම</div>
-                            <div class="font-bold text-sm sm:text-base text-slate-800">${item.name}</div>
+                            <div class="font-bold text-sm sm:text-base text-slate-800 flex items-center flex-wrap">${item.name} ${prefectBadge}</div>
                         </div>
                         <div class="grid grid-cols-2 gap-3 pt-2 mt-1 border-t border-slate-50">
                             <div>
@@ -1249,8 +1266,7 @@
                             </div>
                         </div>
                         <div class="flex justify-end gap-2 mt-1 border-t border-slate-50 pt-3">
-                            <button onclick="window.openEditModal('${item.id}')" class="text-xs sm:text-sm text-indigo-600 font-semibold px-3 py-1.5 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition shadow-sm">Edit</button>
-                            <button onclick="window.deleteRecord('${item.id}')" class="text-xs sm:text-sm text-rose-600 font-semibold px-3 py-1.5 bg-rose-50 rounded-lg hover:bg-rose-100 transition shadow-sm">Delete</button>
+                            ${actionButtons}
                         </div>
                     </div>`;
             });
